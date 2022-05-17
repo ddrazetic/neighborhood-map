@@ -1,0 +1,89 @@
+
+// import { useMemo } from "react";
+// import {
+//   GoogleMap,
+//   useLoadScript,
+//   useJsApiLoader,
+//   Marker,
+// } from "@react-google-maps/api";
+// import { observer } from "mobx-react";
+// import { useStores } from "./Stores/StoresContex";
+
+// const App = observer(({ google }) => {
+//   const rootStore = useStores();
+//   const mapStyles = {
+//     width: "100%",
+//     height: "100%",
+//   };
+//   const { isLoaded } = useJsApiLoader({
+//     googleMapsApiKey: "AIzaSyA1sZafYCyfi56FDX3yzz03aRf8fB7uznA",
+//   });
+
+//   if (!isLoaded) return <div>Loading...</div>;
+//   // return <Map />;
+//   return (
+//     <div>
+//       <p>dmewjfirejoi</p>
+//       <GoogleMap
+//         google={window.google}
+//         zoom={13}
+//         mapContainerClassName="map-container"
+//         center={{ lat: 45.551992, lng: 18.701553 }}
+//       ></GoogleMap>
+
+//       {/* <p>{rootStore.number}</p>
+//         <button onClick={rootStore.plus}>+++</button> */}
+//     </div>
+//   );
+// });
+
+// export default App;
+
+// function Map() {
+//   const center = useMemo(() => ({ lat: 44, lng: -80 }), []);
+
+//   return (
+//     <GoogleMap
+//       zoom={10}
+//       center={center}
+//       mapContainerClassName="map-container"
+//       google={windows.google}
+//     >
+//       <Marker position={center} />
+//     </GoogleMap>
+//   );
+// }
+
+// import React from "react";
+// import "./Styles/styles.css";
+// import { observer } from "mobx-react";
+// import { useStores } from "./Stores/StoresContex";
+// import { Map, GoogleApiWrapper } from "google-maps-react";
+
+// const LoadingContainer = (props) => <div>Fancy loading container!</div>;
+// const App = observer(({ google }) => {
+//   const rootStore = useStores();
+//   const mapStyles = {
+//     width: "100%",
+//     height: "100%",
+//   };
+
+//   return (
+//     <div>
+//       <Map
+//         google={google}
+//         zoom={13}
+//         style={mapStyles}
+//         initialCenter={{ lat: 45.551992, lng: 18.701553 }}
+//       />
+
+//       {/* <p>{rootStore.number}</p>
+//       <button onClick={rootStore.plus}>+++</button> */}
+//     </div>
+//   );
+// });
+
+// export default GoogleApiWrapper({
+//   apiKey: "AIzaSyA1sZafYCyfi56FDX3yzz03aRf8fB7uznA",
+//   LoadingContainer: LoadingContainer,
+// })(App);
