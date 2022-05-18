@@ -2,7 +2,7 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { observer } from "mobx-react";
 import { useStores } from "../Stores/StoresContex";
-import { toJS } from "mobx";
+// import { toJS } from "mobx";
 
 const Map = observer(() => {
   //   useEffect(() => {
@@ -20,24 +20,35 @@ const Map = observer(() => {
 
   return isLoaded ? (
     <GoogleMap
-      mapContainerStyle={toJS(rootStore.containerStyle)}
+      mapContainerClassName="map-container"
       center={rootStore.center}
       zoom={rootStore.zoom}
+      onClick={function () {
+        rootStore.setActiveMarker("");
+      }}
     >
       <>
-        {/* <Marker position={rootStore.center} />
-        <Marker position={rootStore.center2} /> */}
-        {rootStore.locations.map((store, index) => {
+        {rootStore.filteredLocations.map((store, index) => {
           return (
             <Marker
               key={index}
               id={index}
-              animation={window.google.maps.Animation.DROP}
+              // animation={window.google.maps.Animation.DROP}
+              animation={
+                rootStore.activeMarker
+                  ? store.id === rootStore.activeMarker.id
+                    ? "1"
+                    : "0"
+                  : "0"
+              }
               position={{
                 lat: store.lat,
                 lng: store.lng,
               }}
-              onClick={() => console.log("You clicked me!")}
+              onClick={function () {
+                rootStore.setActiveMarker(store);
+                // console.log(this);
+              }}
             />
           );
         })}
