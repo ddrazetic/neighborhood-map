@@ -6,7 +6,7 @@ const List = observer(() => {
   const rootStore = useStores();
   return (
     <div className="list">
-      <h4 className="headerList">Restaurants</h4>
+      <h4 className="headerList">Locations</h4>
       <form className="formSearch" onSubmit={rootStore.filterLocations}>
         <input
           className="inputSearch"
@@ -38,7 +38,7 @@ const List = observer(() => {
             );
           })
         ) : (
-          <li>No restaurants</li>
+          <li>No locations</li>
         )}
       </ul>
     </div>

@@ -12,13 +12,8 @@ const Navbar = observer(() => {
       </button>
 
       <h3 className="headerText">
-        {" "}
         {!rootStore.showingList ? "Neighborhood Map" : "NM"}
       </h3>
-
-      {/* {!rootStore.showingList && (
-        <h3 className="headerText"> Neighborhood Map</h3>
-      )} */}
     </nav>
   );
 });

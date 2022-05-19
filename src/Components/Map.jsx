@@ -1,8 +1,12 @@
 // import React, { useEffect } from "react";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  InfoWindow,
+  Marker,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import { observer } from "mobx-react";
 import { useStores } from "../Stores/StoresContex";
-// import { toJS } from "mobx";
 
 const Map = observer(() => {
   //   useEffect(() => {
@@ -28,32 +32,49 @@ const Map = observer(() => {
           rootStore.setActiveMarker("");
         }}
       >
-        <>
-          {rootStore.filteredLocations.map((store, index) => {
-            return (
-              <Marker
-                key={index}
-                id={index}
-                // animation={window.google.maps.Animation.DROP}
-                animation={
-                  rootStore.activeMarker
-                    ? store.id === rootStore.activeMarker.id
-                      ? "1"
-                      : "0"
+        {rootStore.activeMarker.lat && (
+          <InfoWindow
+            position={{
+              lat: parseFloat(rootStore.activeMarker.lat + 0.0007),
+              lng: parseFloat(rootStore.activeMarker.lng),
+            }}
+            onCloseClick={() => {
+              rootStore.setActiveMarker("");
+            }}
+          >
+            <div>
+              {!rootStore.loading ? (
+                rootStore.contents.map((content) => (
+                  <div key={1} dangerouslySetInnerHTML={{ __html: content }} />
+                ))
+              ) : (
+                <p>loading...</p>
+              )}
+            </div>
+          </InfoWindow>
+        )}
+        {rootStore.filteredLocations.map((store, index) => {
+          return (
+            <Marker
+              key={index}
+              id={index}
+              animation={
+                rootStore.activeMarker
+                  ? store.id === rootStore.activeMarker.id
+                    ? "1"
                     : "0"
-                }
-                position={{
-                  lat: store.lat,
-                  lng: store.lng,
-                }}
-                onClick={function () {
-                  rootStore.setActiveMarker(store);
-                  // console.log(this);
-                }}
-              />
-            );
-          })}
-        </>
+                  : "0"
+              }
+              position={{
+                lat: store.lat,
+                lng: store.lng,
+              }}
+              onClick={function () {
+                rootStore.setActiveMarker(store);
+              }}
+            ></Marker>
+          );
+        })}
       </GoogleMap>
     )
   );

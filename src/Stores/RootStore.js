@@ -1,60 +1,74 @@
-import { makeAutoObservable, toJS } from "mobx";
-// import { makeAutoObservable, runInAction } from "mobx";
-// import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-class RootStore {
-  number = 9;
+import { makeAutoObservable } from "mobx";
 
+class RootStore {
   center = {
     lat: 45.54768486675738,
     lng: 18.698328490729086,
   };
-  center2 = {
-    lat: 45.55483330391221,
-    lng: 18.693082371696782,
-  };
+
   zoom = 16;
 
   locations = [
     {
       id: 1,
-      name: "McDonald's Drinska",
+      name: "McDonald's - food",
+      nameLink: "McDonald%27s",
       lat: 45.55083330391221,
       lng: 18.693082371696782,
     },
     {
       id: 2,
-      name: "Restoran Karaka Osijek",
-      lat: 45.54915214648205,
-      lng: 18.69235816982313,
+      name: "dm - cosmetics",
+      nameLink: "Dm-drogerie_markt",
+      lat: 45.55143038849984,
+      lng: 18.696078454047157,
     },
     {
       id: 3,
-      name: "Pizzeria Novi Saloon",
-      lat: 45.54455258753893,
-      lng: 18.69288106317513,
+      name: "Spar - store",
+      nameLink: "SPAR_(retailer)",
+      lat: 45.5500229503587,
+      lng: 18.692632655771277,
     },
     {
       id: 4,
-      name: "Restoran Strossmayer No. 2",
-      lat: 45.550806210558626,
-      lng: 18.705525005122915,
+      name: "Müller - cosmetics",
+      nameLink: "Müller_(store)",
+      lat: 45.546459523991814,
+      lng: 18.709641155059742,
     },
     {
       id: 5,
-      name: "Pizzeria Sebastian",
-      lat: 45.55016141430503,
-      lng: 18.700676556401163,
+      name: "IKEA - furniture",
+      nameLink: "IKEA",
+      lat: 45.542984431744536,
+      lng: 18.68881878214098,
     },
     {
       id: 6,
-      name: "Pizzeria La Rosa",
-      lat: 45.54899221255438,
-      lng: 18.69656896165396,
+      name: "Konzum - store",
+      nameLink: "Konzum",
+      lat: 45.55095016426026,
+      lng: 18.69598254513013,
+    },
+    {
+      id: 7,
+      name: "Kaufland - store",
+      nameLink: "Kaufland",
+      lat: 45.54450589797251,
+      lng: 18.709384694091177,
     },
   ];
-  activeMarker = [];
 
+  activeMarker = [];
   showingList = true;
+
+  loading = false;
+  error = "";
+  contents = [];
+
+  url =
+    "https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=";
 
   searchInput = JSON.parse(localStorage.getItem("searchInput"))
     ? JSON.parse(localStorage.getItem("searchInput"))
@@ -63,7 +77,6 @@ class RootStore {
   filteredLocations = JSON.parse(localStorage.getItem("filteredLocations"))
     ? JSON.parse(localStorage.getItem("filteredLocations"))
     : this.locations;
-  // filteredLocations = this.locations;
 
   constructor() {
     makeAutoObservable(this);
@@ -73,7 +86,9 @@ class RootStore {
     this.activeMarker.id !== marker.id
       ? (this.activeMarker = marker)
       : (this.activeMarker = "");
-    // marker && console.log(toJS(this.activeMarker));
+    if (this.activeMarker) {
+      this.getContents();
+    }
   };
   setShowingList = () => {
     this.showingList = !this.showingList;
@@ -92,8 +107,7 @@ class RootStore {
     this.filteredLocations = this.locations.filter((location) =>
       location.name.toLowerCase().includes(this.searchInput.toLowerCase())
     );
-    console.log(this.filteredLocations.length);
-
+    this.setActiveMarker("");
     localStorage.setItem(
       "filteredLocations",
       JSON.stringify(this.filteredLocations)
@@ -103,8 +117,37 @@ class RootStore {
     // console.log(toJS(this.filteredLocations));
   };
 
-  plus = () => {
-    this.number = this.number + 1;
+  setContents = (value) => {
+    this.contents = value;
+  };
+  setError = (value) => {
+    this.error = value;
+  };
+  setLoading = (value) => {
+    this.loading = value;
+  };
+
+  extractAPIContents = (json) => {
+    const { pages } = json.query;
+    return Object.keys(pages).map((id) => pages[id].extract);
+  };
+
+  getContents = async () => {
+    let resp;
+    let contents = [];
+    this.setLoading(true);
+    try {
+      resp = await fetch(this.url + this.activeMarker.nameLink);
+      const json = await resp.json();
+      // console.log(json);
+      contents = this.extractAPIContents(json);
+    } catch (err) {
+      this.setError(err);
+    } finally {
+      this.setLoading(false);
+    }
+    this.setContents(contents);
+    // console.log(this.contents);
   };
 }
 
