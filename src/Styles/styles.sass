@@ -57,19 +57,20 @@ $font: 'Roboto', sans-serif
         li
             list-style: none
             border-top: solid $border 1px
-            .button-list
-                width: 15rem
-                padding: 0.5rem 0.5rem
-                font-size: 1.05rem
-                cursor: pointer
-                border: none
-                background-color: $listBackgroundColor
-                &:hover
-                    color: #d3d3d3
-                    background-color: $activeItemColor
-            .active-list
-                color: white
-                background-color: $activeItemColor
+.button-list
+    width: 15rem
+    padding: 0.5rem 0.5rem
+    font-size: 1.05rem
+    cursor: pointer
+    border: none
+    background-color: $listBackgroundColor
+    overflow: auto
+    &:hover
+        color: #d3d3d3
+        background-color: $activeItemColor
+.active-list
+    color: white
+    background-color: $activeItemColor
 .formSearch
     display: flex
     padding: 2rem 0
@@ -95,3 +96,14 @@ $font: 'Roboto', sans-serif
         img
             height: 1.6rem
             width: 1.6rem
+
+@media only screen and (max-width: 768px)
+    .inputSearch
+        font-size: 10px
+        width: 9rem
+    .list
+        padding: 0 0.3rem
+    .button-list
+        width: 12rem
+        padding: 0.5rem 0.2rem
+        font-size: 1rem

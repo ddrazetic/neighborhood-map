@@ -3,10 +3,6 @@ import { makeAutoObservable, toJS } from "mobx";
 // import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 class RootStore {
   number = 9;
-  // containerStyle = {
-  //   width: "100p%",
-  //   height: "90vh",
-  // };
 
   center = {
     lat: 45.54768486675738,
@@ -60,9 +56,14 @@ class RootStore {
 
   showingList = true;
 
-  searchInput = "";
-  // filteredLocations=JSON.parse(localStorage.getItem("filteredLocations"));
-  filteredLocations = this.locations;
+  searchInput = JSON.parse(localStorage.getItem("searchInput"))
+    ? JSON.parse(localStorage.getItem("searchInput"))
+    : "";
+
+  filteredLocations = JSON.parse(localStorage.getItem("filteredLocations"))
+    ? JSON.parse(localStorage.getItem("filteredLocations"))
+    : this.locations;
+  // filteredLocations = this.locations;
 
   constructor() {
     makeAutoObservable(this);
@@ -91,11 +92,14 @@ class RootStore {
     this.filteredLocations = this.locations.filter((location) =>
       location.name.toLowerCase().includes(this.searchInput.toLowerCase())
     );
+    console.log(this.filteredLocations.length);
 
     localStorage.setItem(
       "filteredLocations",
       JSON.stringify(this.filteredLocations)
     );
+
+    localStorage.setItem("searchInput", JSON.stringify(this.searchInput));
     // console.log(toJS(this.filteredLocations));
   };
 

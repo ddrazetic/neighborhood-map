@@ -20,22 +20,26 @@ const List = observer(() => {
         </button>
       </form>
       <ul>
-        {rootStore.filteredLocations.map((store, index) => {
-          return (
-            <li key={index}>
-              <button
-                onClick={function () {
-                  rootStore.setActiveMarker(store);
-                }}
-                className={` ${
-                  rootStore.activeMarker.id === store.id ? "active-list" : ""
-                }  button-list `}
-              >
-                {store.name}
-              </button>
-            </li>
-          );
-        })}
+        {rootStore.filteredLocations.length ? (
+          rootStore.filteredLocations.map((store, index) => {
+            return (
+              <li key={index}>
+                <button
+                  onClick={function () {
+                    rootStore.setActiveMarker(store);
+                  }}
+                  className={` ${
+                    rootStore.activeMarker.id === store.id ? "active-list" : ""
+                  }  button-list `}
+                >
+                  {store.name}
+                </button>
+              </li>
+            );
+          })
+        ) : (
+          <li>No restaurants</li>
+        )}
       </ul>
     </div>
   );
