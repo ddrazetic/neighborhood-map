@@ -9,7 +9,8 @@ const App = observer(() => {
   const rootStore = useStores();
   return (
     <div className="main-container">
-      {rootStore.showingList && <List />}
+      <List />
+      {/* {rootStore.showingList && <List />} */}
       <div className="navbar_map">
         <Navbar />
         <Map />

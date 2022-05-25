@@ -8,6 +8,8 @@ $font: 'Roboto', sans-serif
     padding: 0
     margin: 0
     font-family: $font
+body
+    background-color: $navColor
 .main-container
     // display: grid
     // grid-template-columns: auto 1fr
@@ -24,29 +26,50 @@ $font: 'Roboto', sans-serif
     height: 3rem
     background-color: $navColor
     display: flex
-    justify-content: space-between
-    align-items: center
+    // justify-content: right
+    // justify-content: space-between
 
+    align-items: center
+    float: right
     .headerText
         font-size: clamp(1.2rem, 5.5vw, 2rem)
         // float: right
         margin-right: 1rem
+        float: right
     .hamburgerButton
         border: none
         margin-left: 1rem
         cursor: pointer
         background-color: $navColor
+        float: right
         .hamburgerImage
             height: 2.5rem
             background-color: $navColor
-
+.show_list
+    transform: translate(0) !important
+// .containerList
+    // height: 500px
+    // overflow: auto
+    // border: solid 2px black !important
 .list
-    height: 100vh
+    // height: 100vh
+    // overflow: auto
     overflow: auto
     color: #313131
     background-color: $listBackgroundColor
     padding: 0 1rem
-    flex-shrink: 0
+    // flex-shrink: 0
+    // width: 100%
+    position: fixed
+    // background-color: brown
+    // display: flex
+    top: 0
+    left: 0
+    max-width: 300px
+    height: 100vh
+    z-index: 99
+    transition: all 2s ease
+    transform: translate(-300px)
     .headerList
         height: 3rem
         font-size: 2rem
@@ -54,9 +77,12 @@ $font: 'Roboto', sans-serif
         justify-content: center
         align-items: center
     ul
+        height:
+        overflow: hidden
         li
             list-style: none
             border-top: solid $border 1px
+
 .button-list
     width: 15rem
     padding: 0.5rem 0.5rem
@@ -71,6 +97,42 @@ $font: 'Roboto', sans-serif
 .active-list
     color: white
     background-color: $activeItemColor
+.formNewLocation
+    display: flex
+    flex-direction: column
+    gap: 5px
+    margin-top: 5px
+    .linkTextInfo
+        max-width: 12rem
+        font-size: 11px
+
+    .inputNewLocation
+        border: none
+        outline: none
+        background-color: $navColor
+        font-size: 1rem
+        padding: 0.2rem 0
+        &:active
+            border: none
+            outline: none
+        &:focus
+            border-bottom: 1px $border solid
+            border-top: 1px $border solid
+    .buttonNewLocation
+        background-color: #e2e2e2
+        border: none
+        font-size: 1.4rem
+        padding: 0.3rem 0
+        cursor: pointer
+
+.buttonShowForm
+    background-color: #3d3d3d
+    color: #fff
+    border: none
+    font-size: 1.4rem
+    padding: 0.3rem
+    width: 100%
+    cursor: pointer
 .formSearch
     display: flex
     padding: 2rem 0
@@ -92,7 +154,10 @@ $font: 'Roboto', sans-serif
         width: 3rem
         background-color: #e2e2e2
         border: none
-        cursor: pointer
+        // cursor: pointer
+        display: flex
+        justify-content: center
+        align-items: center
         img
             height: 1.6rem
             width: 1.6rem

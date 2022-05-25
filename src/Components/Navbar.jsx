@@ -7,13 +7,12 @@ const Navbar = observer(() => {
 
   return (
     <nav className="navbar">
-      <button onClick={rootStore.setShowingList} className="hamburgerButton">
-        <img className="hamburgerImage" src={Hamburger} alt="hamburger"></img>
-      </button>
-
       <h3 className="headerText">
         {!rootStore.showingList ? "Neighborhood Map" : "NM"}
       </h3>
+      <button onClick={rootStore.setShowingList} className="hamburgerButton">
+        <img className="hamburgerImage" src={Hamburger} alt="hamburger"></img>
+      </button>
     </nav>
   );
 });

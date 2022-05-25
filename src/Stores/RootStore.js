@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { autorun, makeAutoObservable, toJS } from "mobx";
 
 class RootStore {
   center = {
@@ -62,25 +62,93 @@ class RootStore {
 
   activeMarker = [];
   showingList = true;
-
+  showingNewLocationForm = false;
   loading = false;
   error = "";
   contents = [];
-
+  newMarkerLat = null;
+  newMarkerLng = null;
+  newMarkerName = "";
+  newMarkerLink = "";
+  newMarkerError = "";
   url =
     "https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=";
 
-  searchInput = JSON.parse(localStorage.getItem("searchInput"))
-    ? JSON.parse(localStorage.getItem("searchInput"))
-    : "";
-
-  filteredLocations = JSON.parse(localStorage.getItem("filteredLocations"))
-    ? JSON.parse(localStorage.getItem("filteredLocations"))
-    : this.locations;
+  searchInput = "";
+  filteredLocations = this.locations;
 
   constructor() {
     makeAutoObservable(this);
+    this.autoSave();
   }
+  showNewLocationForm = () => {
+    this.showingNewLocationForm = !this.showingNewLocationForm;
+    this.setActiveMarker("");
+    this.setNewMarkerLocation(null, null);
+    // console.log(toJS(this.locations.length));
+    // console.log(toJS(this.locations[-1].id) + 1);
+  };
+  addNewLocation = (e) => {
+    e.preventDefault();
+    if (
+      this.newMarkerLat &&
+      this.newMarkerLng &&
+      this.newMarkerName &&
+      this.newMarkerLink
+    ) {
+      this.newMarkerError = "";
+      this.locations.push({
+        id: this.locations.length + 1,
+        name: this.newMarkerName,
+        nameLink: this.newMarkerLink,
+        lat: this.newMarkerLat,
+        lng: this.newMarkerLng,
+      });
+      this.filteredLocations = this.locations;
+      this.searchInput = "";
+      this.newMarkerLat = null;
+      this.newMarkerLng = null;
+      this.newMarkerName = "";
+      this.newMarkerLink = "";
+    } else {
+      this.newMarkerError = "Please fill all fields!";
+    }
+    console.log(this.newMarkerError);
+  };
+
+  onChangeMarkerName = (e) => {
+    this.newMarkerName = e.target.value;
+    // console.log(this.newMarkerName);
+  };
+  onChangeMarkerLink = (e) => {
+    this.newMarkerLink = e.target.value;
+    // console.log(this.newMarkerLink);
+  };
+
+  autoSave = () => {
+    const storedJsonLocations = localStorage.getItem("locations");
+    if (storedJsonLocations) {
+      this.locations = JSON.parse(storedJsonLocations);
+    }
+    const storedJsonFilteredLocations =
+      localStorage.getItem("filteredLocations");
+    if (storedJsonFilteredLocations) {
+      this.filteredLocations = JSON.parse(storedJsonFilteredLocations);
+    }
+    const storedJsonInput = localStorage.getItem("searchInput");
+    if (storedJsonInput) {
+      this.searchInput = JSON.parse(storedJsonInput);
+    }
+    autorun(() => {
+      localStorage.setItem("locations", JSON.stringify(this.locations));
+      localStorage.setItem(
+        "filteredLocations",
+        JSON.stringify(this.filteredLocations)
+      );
+
+      localStorage.setItem("searchInput", JSON.stringify(this.searchInput));
+    });
+  };
 
   setActiveMarker = (marker) => {
     this.activeMarker.id !== marker.id
@@ -92,6 +160,12 @@ class RootStore {
   };
   setShowingList = () => {
     this.showingList = !this.showingList;
+  };
+  setNewMarkerLocation = (lat, lng) => {
+    this.newMarkerLat = lat;
+    this.newMarkerLng = lng;
+
+    // console.log("lat: " + this.newMarkerLat + "\nlong: " + this.newMarkerLng);
   };
 
   onChangeSearchInput = (e) => {
@@ -108,13 +182,6 @@ class RootStore {
       location.name.toLowerCase().includes(this.searchInput.toLowerCase())
     );
     this.setActiveMarker("");
-    localStorage.setItem(
-      "filteredLocations",
-      JSON.stringify(this.filteredLocations)
-    );
-
-    localStorage.setItem("searchInput", JSON.stringify(this.searchInput));
-    // console.log(toJS(this.filteredLocations));
   };
 
   setContents = (value) => {
@@ -138,11 +205,16 @@ class RootStore {
     this.setLoading(true);
     try {
       resp = await fetch(this.url + this.activeMarker.nameLink);
+
       const json = await resp.json();
-      // console.log(json);
+      // console.log(json.query.pages[-1]);
+      // if (json.query.pages[-1].pageid) return;
+
       contents = this.extractAPIContents(json);
     } catch (err) {
       this.setError(err);
+      console.log(err);
+      alert(err);
     } finally {
       this.setLoading(false);
     }
