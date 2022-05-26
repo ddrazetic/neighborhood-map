@@ -1,11 +1,10 @@
-// import React, { useEffect } from "react";
+import React from "react";
 import {
   GoogleMap,
   InfoWindow,
   Marker,
   useJsApiLoader,
 } from "@react-google-maps/api";
-import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import { useStores } from "../Stores/StoresContex";
 
@@ -30,8 +29,6 @@ const Map = observer(() => {
         center={rootStore.center}
         zoom={rootStore.zoom}
         onClick={function (ev) {
-          // console.log("latitide = ", ev.latLng.lat());
-          // console.log("longitude = ", ev.latLng.lng());
           rootStore.setNewMarkerLocation(ev.latLng.lat(), ev.latLng.lng());
           rootStore.setActiveMarker("");
         }}

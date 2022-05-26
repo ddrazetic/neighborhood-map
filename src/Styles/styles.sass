@@ -10,11 +10,10 @@ $font: 'Roboto', sans-serif
     font-family: $font
 body
     background-color: $navColor
-.main-container
-    // display: grid
-    // grid-template-columns: auto 1fr
     width: 100%
-    // background-color: red
+    height: 100%
+.main-container
+    width: 100%
     display: flex
 
 .map-container
@@ -26,14 +25,10 @@ body
     height: 3rem
     background-color: $navColor
     display: flex
-    // justify-content: right
-    // justify-content: space-between
-
     align-items: center
     float: right
     .headerText
         font-size: clamp(1.2rem, 5.5vw, 2rem)
-        // float: right
         margin-right: 1rem
         float: right
     .hamburgerButton
@@ -47,26 +42,18 @@ body
             background-color: $navColor
 .show_list
     transform: translate(0) !important
-// .containerList
-    // height: 500px
-    // overflow: auto
-    // border: solid 2px black !important
+
 .list
-    // height: 100vh
-    // overflow: auto
-    overflow: auto
     color: #313131
     background-color: $listBackgroundColor
     padding: 0 1rem
-    // flex-shrink: 0
-    // width: 100%
     position: fixed
-    // background-color: brown
-    // display: flex
+    display: flex
+    flex-direction: column
     top: 0
     left: 0
     max-width: 300px
-    height: 100vh
+    height: 100%
     z-index: 99
     transition: all 2s ease
     transform: translate(-300px)
@@ -77,17 +64,29 @@ body
         justify-content: center
         align-items: center
     ul
-        height:
-        overflow: hidden
+        overflow: auto
+
         li
             list-style: none
             border-top: solid $border 1px
+        li:last-child
+            border-bottom: solid $border 1px
+
+.deleteButton
+    border: none
+    font-size: 1.1rem
+    cursor: pointer
+    color: #a12b2b
+    background-color: $listBackgroundColor
+    &:hover
+        color: #d3d3d3
 
 .button-list
     width: 15rem
     padding: 0.5rem 0.5rem
     font-size: 1.05rem
     cursor: pointer
+    color: #1a1a1a
     border: none
     background-color: $listBackgroundColor
     overflow: auto
@@ -97,8 +96,23 @@ body
 .active-list
     color: white
     background-color: $activeItemColor
+.formNewLocation-open
+    height: 230px !important
+.buttonShowForm
+    background-color: #3d3d3d
+    color: #fff
+    border: none
+    margin-top: 1rem
+    font-size: 1.4rem
+    padding: 0.3rem
+    width: 100%
+    cursor: pointer
 .formNewLocation
+    transition: 1.5s
+    overflow: hidden
     display: flex
+    height: 0
+
     flex-direction: column
     gap: 5px
     margin-top: 5px
@@ -125,24 +139,15 @@ body
         padding: 0.3rem 0
         cursor: pointer
 
-.buttonShowForm
-    background-color: #3d3d3d
-    color: #fff
-    border: none
-    font-size: 1.4rem
-    padding: 0.3rem
-    width: 100%
-    cursor: pointer
 .formSearch
     display: flex
     padding: 2rem 0
-    // background-color: $navColor
     .inputSearch
         border: none
         outline: none
         background-color: $navColor
         font-size: 1.05rem
-        padding: 0.3rem 0
+        padding: 0.3rem 0.5rem
         &:active
             border: none
             outline: none
@@ -154,17 +159,21 @@ body
         width: 3rem
         background-color: #e2e2e2
         border: none
-        // cursor: pointer
         display: flex
         justify-content: center
         align-items: center
         img
             height: 1.6rem
             width: 1.6rem
+.marginContainer
+    height: 2rem
 
-// .gm-style-iw > button
-//     display: none !important
-
+.Toastify__toast-theme--light
+    background-color: #f7f7f7 !important
+.greenBar
+    background: #66bb45 !important
+.redBar
+    background: #a12b2b !important
 @media only screen and (max-width: 768px)
     .inputSearch
         font-size: 10px

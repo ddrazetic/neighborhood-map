@@ -1,4 +1,6 @@
-import { autorun, makeAutoObservable, toJS } from "mobx";
+import { autorun, makeAutoObservable } from "mobx";
+import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 class RootStore {
   center = {
@@ -6,7 +8,7 @@ class RootStore {
     lng: 18.698328490729086,
   };
 
-  zoom = 16;
+  zoom = 14;
 
   locations = [
     {
@@ -85,8 +87,11 @@ class RootStore {
     this.showingNewLocationForm = !this.showingNewLocationForm;
     this.setActiveMarker("");
     this.setNewMarkerLocation(null, null);
-    // console.log(toJS(this.locations.length));
-    // console.log(toJS(this.locations[-1].id) + 1);
+  };
+  deleteMarkerByID = (id, e) => {
+    this.locations = this.locations.filter((item) => item.id !== id);
+    this.notifyDeleteMarker();
+    this.filterLocations(e);
   };
   addNewLocation = (e) => {
     e.preventDefault();
@@ -98,12 +103,14 @@ class RootStore {
     ) {
       this.newMarkerError = "";
       this.locations.push({
-        id: this.locations.length + 1,
+        id: nanoid(),
+        // id: this.locations.length + 1,
         name: this.newMarkerName,
         nameLink: this.newMarkerLink,
         lat: this.newMarkerLat,
         lng: this.newMarkerLng,
       });
+      this.notifyCreateMarker();
       this.filteredLocations = this.locations;
       this.searchInput = "";
       this.newMarkerLat = null;
@@ -113,16 +120,18 @@ class RootStore {
     } else {
       this.newMarkerError = "Please fill all fields!";
     }
-    console.log(this.newMarkerError);
+    // console.log(this.newMarkerError);
   };
+  notifyCreateMarker = () =>
+    toast("Added new location!", { progressClassName: "greenBar" });
+  notifyDeleteMarker = () =>
+    toast("Deleted location!", { progressClassName: "redBar" });
 
   onChangeMarkerName = (e) => {
     this.newMarkerName = e.target.value;
-    // console.log(this.newMarkerName);
   };
   onChangeMarkerLink = (e) => {
     this.newMarkerLink = e.target.value;
-    // console.log(this.newMarkerLink);
   };
 
   autoSave = () => {
@@ -164,13 +173,11 @@ class RootStore {
   setNewMarkerLocation = (lat, lng) => {
     this.newMarkerLat = lat;
     this.newMarkerLng = lng;
-
     // console.log("lat: " + this.newMarkerLat + "\nlong: " + this.newMarkerLng);
   };
 
   onChangeSearchInput = (e) => {
     this.setSearchInput(e.target.value);
-    // console.log(this.searchInput);
   };
 
   setSearchInput = (value) => {
@@ -207,19 +214,25 @@ class RootStore {
       resp = await fetch(this.url + this.activeMarker.nameLink);
 
       const json = await resp.json();
-      // console.log(json.query.pages[-1]);
-      // if (json.query.pages[-1].pageid) return;
 
       contents = this.extractAPIContents(json);
+      // console.log(contents);
+      // console.log(contents[0][1]);
     } catch (err) {
       this.setError(err);
       console.log(err);
-      alert(err);
+      // alert(err);
     } finally {
       this.setLoading(false);
     }
-    this.setContents(contents);
-    // console.log(this.contents);
+
+    if (!contents[0]) {
+      this.setContents(["<p>Invalid link!!</p>"]);
+    } else if (contents[0][1] !== "p") {
+      this.setContents(["<p>Invalid link!!</p>"]);
+    } else {
+      this.setContents(contents);
+    }
   };
 }
 
